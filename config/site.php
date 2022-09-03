@@ -1,7 +1,5 @@
 <?php
 
 return [
-    'pagination' => [
-        'limit' => '10'
-    ]
+    "otpExpirationTimeInMinutes" => "10",
 ];

@@ -1,9 +1,6 @@
 <?php
 
-use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,57 +13,12 @@ use Inertia\Inertia;
 |
 */
 
-Route::get('/login', [LoginController::class, 'index'])->name('login');
+Route::get('/', function () {
+    return view('welcome');
+});
 
-Route::post('/login', [LoginController::class, 'login'])->name('login.action');
-Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
-
-
-
-Route::group([
-    'middleware' => "auth:sanctum"
-], function () {
-    Route::get('/', function () {
-        return redirect()->route(auth()->check() ? 'dashboard': 'login');
-    });
-
-    Route::get('/dashboard', function () {
-        return Inertia::render('Welcome', [
-            'user' => auth()->user() ? [
-                'id' => auth()->user()->id,
-                'name' => auth()->user()->name
-            ]: null
-        ]);
-    })->name('dashboard');
-
-
-    Route::get('/users', [
-        UserController::class,
-        'index'
-    ])->name('user.index');
-
-    Route::get('/users/+', [
-        UserController::class,
-        'create'
-    ])->name('user.create');
-
-    Route::post('/users/+', [
-        UserController::class,
-        'store'
-    ])->name('user.store');
-
-    Route::get('/users/{user}/edit', [
-        UserController::class,
-        'create'
-    ])->name('user.edit');
-
-    Route::post('/users/{user}/edit', [
-        UserController::class,
-        'update'
-    ])->name('user.update');
-
-    Route::delete('/users/{user}', [
-        UserController::class,
-        'delete'
-    ])->name('user.delete');
+Route::group(['prefix' => 'developer'], function () {
+    Route::get('login','Developer\DeveloperController@loginPage');
+    Route::post('login','Developer\DeveloperController@login')->name('developer.login');
+    Route::get('dashboard','Developer\DeveloperController@dashboard')->name('developer.dashboard')->middleware('developer');
 });
